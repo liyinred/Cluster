@@ -1,4 +1,4 @@
-
+[knn and kmenas difference](https://github.com/liyinred/Cluster_Wenhao/blob/main/Cluster_dif.md)
 ## FAISS的IVF-PQ算法基于这个做谱图的聚类识别的具体流程
 1. 生成谱图数据：利用 NumPy 库生成了包含 2000 个谱图（每个谱图有 200 个特征）的示例数据集。这个步骤是为了模拟真实的谱图数据，用于后续的聚类和相似性搜索。
 2. K-means 聚类：利用 Faiss 库中的 K-means 算法将谱图数据进行聚类。这一步骤的目的是将数据集分成 100 个聚类中心，从而减少数据维度并提高搜索效率。
