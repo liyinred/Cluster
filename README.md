@@ -1,5 +1,5 @@
 <div align="center">
-   <a href="https://github.com/liyinred/Cluster_Wenhao/blob/main/Cluster_dif.md" target="_blank">knn and kmeans difference</a>
+   <a href="https://github.com/liyinred/Cluster_Wenhao/blob/main/Cluster_dif.md" target="_blank">Knn and Kmeans Difference</a>
 </div>
 
 ## FAISS的IVF-PQ算法基于这个做谱图的聚类识别的具体流程
