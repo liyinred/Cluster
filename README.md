@@ -10,6 +10,50 @@
 5. 添加数据到 IVF 索引：将之前训练得到的 Product Quantizer 和聚类中心添加到 IVF 索引中，这样 IVF 索引就包含了用于相似性搜索的关键数据结构。
 6. 定义查询谱图：生成了 5 个随机的查询谱图，用于后续的相似性搜索操作。
 7. 查询和识别：对每个查询谱图进行查询操作，找到最接近的 3 个邻居谱图，并计算它们与查询谱图之间的相似性分数。这个过程是通过 IVF 索引和 PQ 技术实现的，可以高效地找到相似的谱图数据。
+
+```python
+import numpy as np
+import faiss
+
+def create_index(data, num_clusters=100, m=8, n_bits=8):
+    d = data.shape[1]  # 获取数据的维度
+    quantizer = faiss.IndexFlatIP(d)  # 创建以内积为度量的Flat索引
+    index = faiss.IndexIVFPQ(quantizer, d, num_clusters, m, n_bits, faiss.METRIC_INNER_PRODUCT)  # 创建具有PQ压缩的IVF索引
+    faiss.normalize_L2(data)  # 对数据进行L2归一化处理
+    index.train(data)  # 训练索引
+    index.add(data)  # 添加数据到索引
+    return index  # 返回构建的索引对象
+
+def search_top_k(index, query, k):
+    faiss.normalize_L2(query)  # 对查询向量进行L2归一化处理
+    distances, indices = index.search(query, k)  # 执行搜索，返回距离和索引
+    return distances, indices  # 返回搜索结果
+
+def format_results(distances, indices):
+    results = []  # 初始化结果列表
+    for i, (dist, idx) in enumerate(zip(distances, indices)):  # 遍历每个查询的结果
+        results.append(f"查询 {i+1} 的结果:")  # 格式化输出查询编号
+        for d, id in zip(dist, idx):  # 遍历每个结果的距离和索引
+            results.append(f"  ID: {id}, 相似度: {d:.4f}")  # 格式化输出ID和相似度
+        results.append("")  # 添加空行以分隔不同的查询结果
+    return "\n".join(results)  # 返回格式化后的所有结果
+
+# 示例数据
+data = np.random.random((1000, 2048)).astype('float32')  # 生成随机的浮点数数据
+query = np.random.random((5, 2048)).astype('float32')  # 生成查询向量
+
+# 使用索引进行搜索
+index = create_index(data)
+distances, indices = search_top_k(index, query, 3)
+
+# 格式化并打印输出结果
+formatted_results = format_results(distances, indices)
+print(formatted_results)
+```
+
+
+
+
 ```python
 import numpy as np
 import faiss
